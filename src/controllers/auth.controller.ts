@@ -4,10 +4,13 @@ import { Request, Response } from "express";
 export async function signin(req: Request, res: Response) {
   try {
     //search for user
-    const user = await User.find({ fuid: req.body.fuid }, ["-__v"]);
+    const user = await User.findOne({ fuid: req.body.fuid }, ["-__v"]);
+
     if (!user) {
       //return
-      res.json({ status: "error", message: "User not found!" });
+      return res
+        .status(404)
+        .json({ status: "error", message: "User not found!" });
     }
     //return user
     res.json({ status: "success", data: user });

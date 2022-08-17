@@ -9,6 +9,7 @@ import productRouter from "./src/routes/product.routes";
 import orderRouter from "./src/routes/order.routes";
 import notificationRouter from "./src/routes/notification.routes";
 import storeCategoryRouter from "./src/routes/store-category.routes";
+import authRouter from "./src/routes/auth.routes";
 
 models()
   .then(() => {
@@ -34,6 +35,7 @@ app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/notifications", notificationRouter);
 app.use("/api/store-categories", storeCategoryRouter);
+app.use("/api/auth", authRouter);
 
 //To get images
 app.get("/uploads/:source/:img", (req: Request, res: Response) => {
