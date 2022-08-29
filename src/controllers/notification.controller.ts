@@ -33,3 +33,8 @@ export async function newNotification(req: Request, res: Response) {
       .json({ status: "error", message: "An error has been ocurred!", error });
   }
 }
+
+export async function deleteNotification() {
+  try {
+  } catch (error) {}
+}

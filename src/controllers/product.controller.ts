@@ -64,3 +64,17 @@ export async function newProduct(req: Request, res: Response) {
       .json({ status: "error", message: "An error has been ocurred!", error });
   }
 }
+
+export async function getManyProducts(req: Request, res: Response) {
+  try {
+    const products = req.body.products;
+
+    const _products = await Product.find({ _id: { $in: products } });
+
+    res.json({ status: "success", data: _products });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: "error", message: "An error has been ocurred!", error });
+  }
+}

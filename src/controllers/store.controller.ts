@@ -10,6 +10,8 @@ export async function getStores(req: Request, res: Response) {
 
     res.json({ status: "success", data: stores });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       status: "error",
       message: "An error has been ocurred!",
@@ -66,8 +68,11 @@ export async function getStoresByCategory(req: Request, res: Response) {
 
 export async function getStoreByOwner(req: Request, res: Response) {
   try {
-    const store = await Store.find({ owner: req.params.owner }).limit(1);
-    res.json({ status: "success", data: store });
+    const store = await Store.findOne({ owner: req.params.owner });
+
+    const storePopulate = await Store.populate(store, { path: "category" });
+
+    res.json({ status: "success", data: storePopulate });
   } catch (error) {
     res
       .status(500)
@@ -88,6 +93,41 @@ export async function newStore(req: Request, res: Response) {
 
     const store = await Store.create(req.body);
     res.json({ status: "success", data: store });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: "error", message: "An error has been ocurred!", error });
+  }
+}
+
+export async function updateStore(req: Request, res: Response) {
+  try {
+    //@ts-ignore
+    if (req.imagestore) {
+      //@ts-ignore
+      req.body.picture = req.imagestore;
+    }
+
+    const cat: string = req.body.category.split(",");
+    req.body.category = cat;
+
+    const store = await Store.findByIdAndUpdate(req.params.id, req.body);
+
+    res.json({ status: "success", data: store });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: "error", message: "An error has been ocurred!", error });
+  }
+}
+
+export async function getManyStores(req: Request, res: Response) {
+  try {
+    const stores = req.body.stores;
+
+    const _stores = await Store.find({ _id: { $in: stores } });
+
+    res.json({ status: "success", data: _stores });
   } catch (error) {
     res
       .status(500)
